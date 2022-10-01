@@ -3,6 +3,7 @@ import { Layout, Menu } from 'tdesign-react';
 import { IconFont } from 'tdesign-icons-react';
 import 'tdesign-react/es/style/index.css';
 import styles from './index.less';
+import logo from '@/assets/img/logo.png';
 
 const { Header, Content } = Layout;
 const { HeadMenu, MenuItem } = Menu;
@@ -35,7 +36,7 @@ export default function Main(props: any) {
       <Header>
         <HeadMenu
 					value={props.location.pathname}
-          logo={<img width="136" src="https://www.tencent.com/img/index/menu_logo_hover.png" alt="logo" />}
+					logo={<img width="136" src={logo} alt="logo" />}
           operations={
             <div className="t-menu__operations">
 							<IconFont name="search" size="2em" className="t-menu__operations-icon" />

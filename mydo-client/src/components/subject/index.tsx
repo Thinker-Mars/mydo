@@ -44,8 +44,10 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 	return (
 		<Dialog
 			destroyOnClose
+			closeOnOverlayClick={false}
 			visible={visible}
 			header={header}
+			onClose={handleCancel}
 			onCancel={handleCancel}
 			onConfirm={handleConfirm}
 			className={styles.subjectDialog}

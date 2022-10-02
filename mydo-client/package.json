@@ -20,14 +20,18 @@
     ]
   },
   "dependencies": {
+    "array-move": "^4.0.0",
     "dayjs": "^1.11.5",
+    "lodash": "^4.17.21",
     "react": "17.x",
     "react-dom": "17.x",
+    "react-sortable-hoc": "^2.0.0",
     "tdesign-icons-react": "^0.1.6",
     "tdesign-react": "^0.42.1",
     "umi": "^3.5.34"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.186",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",

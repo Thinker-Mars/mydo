@@ -1,0 +1,34 @@
+:global {
+	.t-portal-wrapper {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+.todo {
+	width: 100%;
+	.sortableItemWrap {
+		position: relative;
+		margin-bottom: 10px;
+	}
+	:global {
+		.t-input__wrap {
+			display: inline-block;
+		}
+	}
+}
+
+.sortableItem {
+	position: relative;
+	z-index: 3000;
+	display: flex;
+	justify-content: space-between;
+
+	.inputWrap {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		margin-right: 10px;
+	}
+
+}

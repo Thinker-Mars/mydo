@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Calendar, Dialog, Form, Input, Swiper } from 'tdesign-react';
+import { useRef } from 'react';
 import dayjs from 'dayjs';
+import { Calendar, Swiper } from 'tdesign-react';
 import type { CalendarCell } from 'tdesign-react';
+import { Subject } from '@/components';
+import type { SubjectInstance } from '@/components';
 import styles from './index.less';
-
-const { FormItem } = Form;
 
 const { SwiperItem } = Swiper;
 
@@ -12,8 +12,7 @@ const { SwiperItem } = Swiper;
  * 主题日历
  */
 const SubjectCalendar = () => {
-	const [visible, setVisible] = useState<boolean>(false);
-	const [form] = Form.useForm();
+	const subjectInstance = useRef<SubjectInstance>(null);
 
 	const renderCell = (cellData: CalendarCell) => {
 		return (
@@ -48,29 +47,14 @@ const SubjectCalendar = () => {
 				}}
 				// preventCellContextmenu
 				onCellDoubleClick={() => {
-					setVisible(true);
+					if (subjectInstance && subjectInstance.current) { 
+							subjectInstance.current.addSubject();
+					}
 				}}
 				// cell={renderCell}
 				className={styles.subjectCalendar}
 			/>
-			<Dialog
-				visible={visible}
-				header="新建主题"
-				onCancel={() => {
-					setVisible(false);
-				}}
-				onConfirm={() => {
-					setVisible(false);
-				}}
-			>
-				<Form
-					form={form}
-				>
-					<FormItem label="主题名称" name="subjectName">
-						<Input />
-					</FormItem>
-				</Form>
-			</Dialog>
+			<Subject ref={subjectInstance} />
 		</>
 	)
 }

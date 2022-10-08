@@ -1,8 +1,7 @@
 import { useState, useImperativeHandle, forwardRef } from 'react';
 import { Form, Dialog, Input } from 'tdesign-react';
-import { Todo } from '@/components';
+import { Todo, TodoSelect } from '@/components';
 import { Header } from './constants';
-import { todoValidator } from './utils';
 import type { SubjectProps, SubjectInstance } from './type';
 import styles from './index.less';
 
@@ -44,8 +43,10 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 	return (
 		<Dialog
 			destroyOnClose
+			closeOnOverlayClick={false}
 			visible={visible}
 			header={header}
+			onClose={handleCancel}
 			onCancel={handleCancel}
 			onConfirm={handleConfirm}
 			className={styles.subjectDialog}
@@ -63,15 +64,15 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 					<Input placeholder="" clearable />
 				</FormItem>
 				<FormItem
+					label="关联内容"
+					name="parentTodo"
+				>
+					<TodoSelect />
+				</FormItem>
+				<FormItem
 					label="待办事项"
 					name="subjectTodo"
 					initialData={['']}
-					rules={[
-						{
-							validator: todoValidator,
-							message: '请填写待办事项'
-						}
-					]}
 				>
 					<Todo />
 				</FormItem>

@@ -16,6 +16,7 @@ const TodoSelect = (props: TodoSelectProps) => {
 
 	return (
 		<TreeSelect
+			clearable
 			filterable
 			data={TodoTree}
 			value={value}

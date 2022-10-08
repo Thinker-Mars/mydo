@@ -2,7 +2,6 @@ import { useState, useImperativeHandle, forwardRef } from 'react';
 import { Form, Dialog, Input } from 'tdesign-react';
 import { Todo, TodoSelect } from '@/components';
 import { Header } from './constants';
-import { todoValidator } from './utils';
 import type { SubjectProps, SubjectInstance } from './type';
 import styles from './index.less';
 
@@ -65,7 +64,7 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 					<Input placeholder="" clearable />
 				</FormItem>
 				<FormItem
-					label="关联待办"
+					label="关联内容"
 					name="parentTodo"
 				>
 					<TodoSelect />
@@ -74,12 +73,6 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 					label="待办事项"
 					name="subjectTodo"
 					initialData={['']}
-					rules={[
-						{
-							validator: todoValidator,
-							message: '请填写待办事项'
-						}
-					]}
 				>
 					<Todo />
 				</FormItem>

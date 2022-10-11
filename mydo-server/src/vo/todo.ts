@@ -1,4 +1,4 @@
-export class Todo {
+class Todo {
 	/**
 	 * todo的id
 	 */
@@ -7,4 +7,8 @@ export class Todo {
 	 * todo内容
 	 */
 	private content: string;
+}
+
+export {
+	Todo
 }

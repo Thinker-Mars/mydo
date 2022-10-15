@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { history } from 'umi';
 import { Layout, Menu } from 'tdesign-react';
 import { IconFont } from 'tdesign-icons-react';
+import { initDB } from '@/utils';
 import 'tdesign-react/es/style/index.css';
 import styles from './index.less';
 import logo from '@/assets/img/logo.png';
@@ -30,6 +32,10 @@ export default function Main(props: any) {
 			)
 		})
 	}
+
+	useEffect(() => {
+		initDB();
+	}, [])
 
   return (
     <Layout>

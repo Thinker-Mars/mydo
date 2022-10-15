@@ -1,4 +1,9 @@
-import { DatabaseName, DBVersionIdentify } from './constants';
+import { getLogger } from '../logger';
+import { DatabaseName, DBVersionIdentify, TableList } from './constants';
+import * as Tables from './po';
+import type { TablesType } from './po/type';
+
+const logger = getLogger();
 
 /**
  * 获取数据库对象
@@ -44,4 +49,38 @@ const updateLocalDBVersion = (dbVersion: number) => {
  */
 const removeLocalDBVersion = () => {
 	localStorage.removeItem(DBVersionIdentify);
+}
+
+/**
+ * 初始化数据库
+ */
+export const initDB = () => {
+	return new Promise<void>((resolve, reject) => {
+		const dbVersion = getLocalDBVersion();
+		const request = window.indexedDB.open(DatabaseName, dbVersion);
+		request.onupgradeneeded = (e) => {
+			logger.info('init table');
+			updateLocalDBVersion(dbVersion);
+			const db = (e?.target as any)?.result;
+			for (const tableName in TableList) {
+				if (!db.objectStoreNames.contains(tableName)) {
+					const table = (Tables as TablesType)[tableName];
+					const optionalParameters = {} as any;
+					if (table.keyPath) {
+						optionalParameters['keyPath'] = table.keyPath;
+					}
+					if (table.autoIncrement) {
+						optionalParameters['autoIncrement'] = table.autoIncrement;
+					}
+					const objectStore = db.createObjectStore(tableName, optionalParameters);
+					for (const column in table.columns) {
+						objectStore.createIndex(column, column, { unique: table.columns[column].unique });
+					}
+				}
+			}
+		}
+		request.onsuccess = () => {
+			resolve();
+		}
+	})
 }

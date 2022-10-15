@@ -1,8 +1,10 @@
-const Todo = {
+import type { TableType } from './type';
+
+const Todo: TableType = {
 	columns: {
 		Id: {
 			remark: 'todo的id',
-			unique: true
+			unique: true,
 		},
 		Content: {
 			remark: 'todo内容',

@@ -1,8 +1,10 @@
-const Subject = {
+import type { TableType } from './type';
+
+const Subject: TableType = {
 	columns: {
 		Id: {
 			remark: '主题id',
-			unique: true
+			unique: true,
 		},
 		SubjectName: {
 			remark: '主题名称',

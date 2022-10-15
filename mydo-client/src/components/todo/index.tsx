@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Input } from 'tdesign-react';
+import { Textarea } from 'tdesign-react';
 import { IconFont } from 'tdesign-icons-react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
-import { MaxTodoCount, DialogClassName } from './constants';
+import { MaxTodoCount, DialogClassName, MaxLength } from './constants';
 import type { TodoProps, SortableItemProps, SortableContainerProps } from './type';
+import type { TodoType } from '@/utils/db/po/type';
 import styles from './index.less';
 
 
@@ -26,17 +27,18 @@ const SortableItem: any = SortableElement(
 		handleRemove
 	}: SortableItemProps
 	) => {
-  return (
+		return (
     <div className={styles.sortableItem}>
       <div className={styles.inputWrap}>
 				<DragHandle />
-				<Input
-					clearable
-					value={value}
-					onChange={(value) => {
-						handleChange(position, value as string);
-					}}
+				<Textarea
+					autosize
+					value={value.content}
 					placeholder=""
+					onChange={(newContent) => {
+						handleChange(position, { ...value, content: newContent });
+					}}
+					maxlength={MaxLength}
 				/>
 			</div>
 			<IconFont
@@ -128,9 +130,9 @@ const Todo = (props: TodoProps) => {
 		resetCursor();
   };
 
-	const handleChange = (changePosition: number, newValue: string) => {
+	const handleChange = (changePosition: number, newTodo: TodoType) => {
 		const pendingValue = [...value];
-		pendingValue[changePosition] = newValue;
+		pendingValue[changePosition] = newTodo;
 		if (onChange) {
 			onChange(pendingValue);
 		}
@@ -144,7 +146,7 @@ const Todo = (props: TodoProps) => {
 	}
 
 	const handleAdd = () => {
-		const pendingValue = [...value, ''];
+		const pendingValue = [...value, { id: undefined, content: '' }];
 		if (onChange) {
 			onChange(pendingValue);
 		}

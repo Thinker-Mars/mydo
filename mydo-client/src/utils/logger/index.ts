@@ -1,4 +1,4 @@
-const DefaultPrefix = 'Mydo';
+const DefaultPrefix = 'Mydo: ';
 
 class Logger {
 	prefix: string;

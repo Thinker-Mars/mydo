@@ -2,16 +2,17 @@ import type { TableType } from './type';
 
 const Todo: TableType = {
 	columns: {
-		Id: {
+		id: {
 			remark: 'todo的id',
 			unique: true,
 		},
-		Content: {
+		content: {
 			remark: 'todo内容',
 			unique: false
 		}
 	},
-	keyPath: 'Id'
+	autoIncrement: true,
+	keyPath: 'id'
 }
 
 export {

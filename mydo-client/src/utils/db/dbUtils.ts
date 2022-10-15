@@ -6,15 +6,27 @@ import type { TablesType } from './po/type';
 const logger = getLogger();
 
 /**
- * 获取数据库对象
- * @param dbName 数据库名称
- * @param version 数据库版本
+ * 获取db版本
+ * 
+ * 如果用户第一次使用则返回1
  */
-const getDB = (dbName: string, version: number) => {
-	return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open(dbName, version);
+ const getLocalDBVersion = () => {
+  const dbVersion = Number(localStorage.getItem(DBVersionIdentify));
+  if (dbVersion > 0) {
+    return dbVersion;
+  }
+  return 1;
+}
+
+/**
+ * 获取数据库对象
+ */
+const getDB = () => {
+	const version = getLocalDBVersion();
+	return new Promise<IDBDatabase>((resolve, reject) => {
+    const request = window.indexedDB.open(DatabaseName, version);
     request.onsuccess = function(e: Event) {
-      const db = (e.target as any).result;
+      const db = (e.target as any).result as IDBDatabase;
       resolve(db);
     };
 		request.onerror = function (e: Event) {
@@ -22,19 +34,6 @@ const getDB = (dbName: string, version: number) => {
 			reject(error);
 		};
   });
-}
-
-/**
- * 获取db版本
- * 
- * 如果用户第一次使用则返回1
- */
-const getLocalDBVersion = () => {
-  const dbVersion = Number(localStorage.getItem(DBVersionIdentify));
-  if (dbVersion > 0) {
-    return dbVersion;
-  }
-  return 1;
 }
 
 /**
@@ -82,5 +81,51 @@ export const initDB = () => {
 		request.onsuccess = () => {
 			resolve();
 		}
+	})
+}
+
+/**
+ * 同步新增一条记录
+ * @param db 数据库对象
+ * @param tableName 表名称
+ * @param data 要更新的记录
+ * @param key 表的主键
+ * @returns 更新的记录行的id
+ */
+const updateRecordSync = (db: IDBDatabase, tableName: string, data: any, key?: any): Promise<number> => {
+	return new Promise((resolve, reject) => {
+		const request = db.transaction(tableName, 'readwrite')
+				.objectStore(tableName)
+				.put(data, key);
+		request.onsuccess = (e) => {
+			const resultKey = (e.target as any)!.result;
+			logger.info(`更新数据: ${JSON.stringify(data)}`);
+			resolve(resultKey);
+		}
+		request.onerror = (e) => {
+			const errorInfo = (e.target as any)!.error;
+			reject(errorInfo);
+		}
+	});
+}
+
+/**
+ * 批量更新记录
+ * @param tableName 表名称
+ * @param data 要更新的记录
+ * @param keyPath 表的主键
+ * @returns 更新记录的行id
+ */
+export const updateRecord = (tableName: string, data: any[], keyPath?: any): Promise<number[]> => {
+	return new Promise((resolve, reject) => {
+		getDB().then(async (db) => {
+			const resultKeys: number[] = [];
+			for (const record of data) {
+				const resultKey = await updateRecordSync(db, tableName, record, record[keyPath]);
+				resultKeys.push(resultKey);
+			}
+			db.close();
+			resolve(resultKeys);
+		})
 	})
 }

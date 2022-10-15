@@ -11,3 +11,8 @@ export const Header = {
 	 */
 	Modify: '修改主题'
 }
+
+/**
+ * 主题名称最大长度
+ */
+export const SubjectMaxLength = 20;

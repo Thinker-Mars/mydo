@@ -23,3 +23,8 @@ export type TableType = {
 }
 
 export type TablesType = Record<string, TableType>;
+
+export type TodoType = {
+	id?: number;
+	content: string;
+}

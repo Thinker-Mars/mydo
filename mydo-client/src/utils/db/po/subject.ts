@@ -2,32 +2,32 @@ import type { TableType } from './type';
 
 const Subject: TableType = {
 	columns: {
-		Id: {
+		id: {
 			remark: '主题id',
 			unique: true,
 		},
-		SubjectName: {
+		subjectName: {
 			remark: '主题名称',
 			unique: false
 		},
-		CreateTime: {
+		createTime: {
 			remark: '主题创建时间（ms）',
 			unique: false
 		},
-		TodoList: {
+		todoList: {
 			remark: '主题下todo的id',
 			unique: false
 		},
-		ParentSubjectId: {
+		parentSubjectId: {
 			remark: '父级主题的id',
 			unique: false
 		},
-		ParentTodoId: {
+		parentTodoId: {
 			remark: '父级todo的id',
 			unique: false
 		}
 	},
-	keyPath: 'Id'
+	keyPath: 'id'
 }
 
 export {

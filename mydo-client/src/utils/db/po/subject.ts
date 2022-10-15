@@ -27,7 +27,8 @@ const Subject: TableType = {
 			unique: false
 		}
 	},
-	keyPath: 'id'
+	keyPath: 'id',
+	autoIncrement: true
 }
 
 export {

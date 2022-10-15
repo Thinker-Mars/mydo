@@ -118,14 +118,18 @@ const updateRecordSync = (db: IDBDatabase, tableName: string, data: any, key?: a
  */
 export const updateRecord = (tableName: string, data: any[], keyPath?: any): Promise<number[]> => {
 	return new Promise((resolve, reject) => {
-		getDB().then(async (db) => {
-			const resultKeys: number[] = [];
-			for (const record of data) {
-				const resultKey = await updateRecordSync(db, tableName, record, record[keyPath]);
-				resultKeys.push(resultKey);
-			}
-			db.close();
-			resolve(resultKeys);
-		})
+		try {
+			getDB().then(async (db) => {
+				const resultKeys: number[] = [];
+				for (const record of data) {
+					const resultKey = await updateRecordSync(db, tableName, record, record[keyPath]);
+					resultKeys.push(resultKey);
+				}
+				db.close();
+				resolve(resultKeys);
+			})
+		} catch (error) {
+			reject(error);
+		}
 	})
 }

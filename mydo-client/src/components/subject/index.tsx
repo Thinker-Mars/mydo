@@ -1,10 +1,12 @@
 import { useState, useImperativeHandle, forwardRef } from 'react';
-import { Form, Dialog, Textarea } from 'tdesign-react';
+import dayjs from 'dayjs';
+import { Form, Dialog, Textarea, MessagePlugin } from 'tdesign-react';
 import { Todo, TodoSelect } from '@/components';
-import { updateTodoLocal } from '@/api/local';
+import { updateTodoLocal, updateSubjectLocal } from '@/api/local';
 import { Header, SubjectMaxLength } from './constants';
+import { haveLogin } from '@/utils';
 import type { SubjectProps, SubjectInstance } from './type';
-import type { TodoType } from '@/utils/db/po/type';
+import type { TodoType, SubjectType } from '@/utils/db/po/type';
 import styles from './index.less';
 
 const { FormItem } = Form;
@@ -50,20 +52,23 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 	}
 
 	/**
-	 * 更新todo的id
-	 * @param todos 
-	 * @param keys 
+	 * 将主题信息保存至本地
+	 * @param formResult 
 	 */
-	const mergeTodosKey = (todos: TodoType[], keys: number[]) => {
-		todos.forEach((todo, index) => {
-			todo.id = keys[index];
-		});
-	}
-
-	const handleSubmit = async (formResult: Record<string, any>) => {
-		const { subjectName, subjectTodo } = formResult;
+	const handleLocalSubmit = async (formResult: Record<string, any>) => {
+		const { subjectId ,subjectName, subjectTodo } = formResult;
 		const todosKey = await updateTodos(subjectTodo);
-		mergeTodosKey(subjectTodo, todosKey);
+		const subject: SubjectType = {
+			subjectName,
+			todoList: todosKey,
+			createTime: dayjs().valueOf()
+		}
+		if (subjectId) {
+			subject.id = subjectId;
+		}
+		await updateSubjectLocal(subject);
+		MessagePlugin.success('操作成功', 1500);
+		setVisible(false);
 	}
 
 	const handleConfirm = () => {
@@ -72,7 +77,9 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 				// 目前先不走db，保存在本地，后续接入登录后，再走db
 				if (typeof result === 'boolean') {
 					const formResult = (form!.getFieldsValue as Function)(true);
-					handleSubmit(formResult);
+					if (!haveLogin()) {
+						handleLocalSubmit(formResult);
+					}
 				}
 			})
 		}
@@ -99,7 +106,7 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 						{ required: true, message: '请输入主题名称', type: 'error' }
 					]}
 				>
-					<Textarea placeholder="" maxLength={SubjectMaxLength} autosize />
+					<Textarea autosize placeholder="" maxlength={SubjectMaxLength} />
 				</FormItem>
 				<FormItem
 					label="关联内容"

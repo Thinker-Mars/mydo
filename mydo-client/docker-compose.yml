@@ -1,0 +1,9 @@
+version: "1"
+services:
+  # 服务名称
+  mydo-client:
+    # 镜像:版本
+    image: mydo-client:latest
+    # 映射容器8000端口到本地8000端口
+    ports:
+     - "8000:8000"

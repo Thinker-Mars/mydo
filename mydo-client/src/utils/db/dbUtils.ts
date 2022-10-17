@@ -133,3 +133,40 @@ export const updateRecord = (tableName: string, data: any[], keyPath?: any): Pro
 		}
 	})
 }
+
+/**
+ * 查询某个范围内的数据
+ * @param tableName 数据表
+ * @param min 最小值
+ * @param max 最大值
+ */
+export const getRecordInRange = (tableName: string, min: number, max: number, cursorName: string) => {
+	return new Promise<unknown[]>((resolve, reject) => {
+		try {
+			getDB().then((db) => {
+				const records: unknown[] = [];
+				const range = IDBKeyRange.bound(min, max, true, true);
+				const request = db.transaction(tableName, 'readonly')
+					.objectStore(tableName)
+					.index(cursorName)
+					.openCursor(range);
+				request.onsuccess = (e) => {
+					const cursor = (e.target as any).result;
+					if (cursor) {
+						records.push(cursor.value);
+						cursor.continue();
+					} else {
+						db.close();
+						resolve(records);
+					}
+				}
+				request.onerror = (e) => {
+					const errorInfo = (e.target as any)!.error;
+					reject(errorInfo);
+				}
+			})
+		} catch (error) {
+			reject(error);
+		}
+	})
+}

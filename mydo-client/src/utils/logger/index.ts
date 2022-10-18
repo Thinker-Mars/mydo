@@ -10,6 +10,10 @@ class Logger {
 	info(text: string) {
 		window.console.info(`${this.prefix}%c${text}`, 'color: blue; font-weight: 600');
 	}
+
+	error(reason: string) {
+		window.console.error(`${this.prefix}: %s`, reason)
+	}
 }
 
 let loggerInstance: Logger;

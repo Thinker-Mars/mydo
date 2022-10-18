@@ -1,9 +1,10 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 import { Calendar, Swiper } from 'tdesign-react';
 import type { CalendarCell } from 'tdesign-react';
 import { Subject } from '@/components';
 import type { SubjectInstance } from '@/components';
+import { getSubjectInRangeTime } from './service';
 import styles from './index.less';
 
 const { SwiperItem } = Swiper;
@@ -30,6 +31,10 @@ const SubjectCalendar = () => {
 			</>
 		)
 	}
+
+	useEffect(() => {
+		getSubjectInRangeTime(10, 2022);
+	}, [])
 
 	return (
 		<>

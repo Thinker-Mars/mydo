@@ -1,4 +1,4 @@
-import { updateRecord, TableList, getRecordInRange } from '@/utils';
+import { updateRecord, TableList, getRecordInRange, getLogger } from '@/utils';
 import type { SubjectType } from '@/utils/db/po/type';
 
 /**
@@ -16,6 +16,13 @@ export const updateSubjectLocal = async (subject: SubjectType) => {
  * @param max 最大日期（ms）
  */
 export const getSubjectInRangeLocal = async (min: number, max: number) => {
-	const record = await getRecordInRange(TableList.Subject, min, max, 'createTime') as SubjectType[];
-	return record;
+	return getRecordInRange(TableList.Subject, min, max, 'createTime').then(
+		(subject) => {
+			return subject as SubjectType[];
+		},
+		(reason) => {
+			getLogger().error(`getSubjectInRangeLocal error: ${reason}`);
+			return [];
+		}
+	)
 }

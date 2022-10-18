@@ -51,6 +51,14 @@ const removeLocalDBVersion = () => {
 }
 
 /**
+ * 判断数据库中是否有某张表
+ * @param tableName 表名称
+ */
+const existTable = (db: IDBDatabase, tableName: string) => {
+	return db.objectStoreNames.contains(tableName);
+}
+
+/**
  * 初始化数据库
  */
 export const initDB = () => {
@@ -94,6 +102,10 @@ export const initDB = () => {
  */
 const updateRecordSync = (db: IDBDatabase, tableName: string, data: any, key?: any): Promise<number> => {
 	return new Promise((resolve, reject) => {
+		if (!existTable(db, tableName)) {
+			reject();
+			return;
+		}
 		const request = db.transaction(tableName, 'readwrite')
 				.objectStore(tableName)
 				.put(data, key);
@@ -120,6 +132,10 @@ export const updateRecord = (tableName: string, data: any[], keyPath?: any): Pro
 	return new Promise((resolve, reject) => {
 		try {
 			getDB().then(async (db) => {
+				if (!existTable(db, tableName)) {
+					reject();
+					return;
+				}
 				const resultKeys: number[] = [];
 				for (const record of data) {
 					const resultKey = await updateRecordSync(db, tableName, record, record[keyPath]);
@@ -144,6 +160,10 @@ export const getRecordInRange = (tableName: string, min: number, max: number, cu
 	return new Promise<unknown[]>((resolve, reject) => {
 		try {
 			getDB().then((db) => {
+				if (!existTable(db, tableName)) {
+					reject(`table ${tableName} not exist`);
+					return;
+				}
 				const records: unknown[] = [];
 				const range = IDBKeyRange.bound(min, max, true, true);
 				const request = db.transaction(tableName, 'readonly')

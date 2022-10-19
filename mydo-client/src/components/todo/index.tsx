@@ -5,7 +5,6 @@ import { SortableContainer, SortableElement, SortableHandle } from 'react-sortab
 import { arrayMoveImmutable } from 'array-move';
 import { MaxTodoCount, DialogClassName, MaxLength } from './constants';
 import type { TodoProps, SortableItemProps, SortableContainerProps } from './type';
-import type { TodoType } from '@/utils/db/po/type';
 import styles from './index.less';
 
 

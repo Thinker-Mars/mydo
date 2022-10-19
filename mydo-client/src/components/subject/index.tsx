@@ -6,7 +6,6 @@ import { updateTodoLocal, updateSubjectLocal } from '@/api/local';
 import { Header, SubjectMaxLength } from './constants';
 import { haveLogin } from '@/utils';
 import type { SubjectProps, SubjectInstance } from './type';
-import type { TodoType, SubjectType } from '@/utils/db/po/type';
 import styles from './index.less';
 
 const { FormItem } = Form;

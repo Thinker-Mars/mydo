@@ -1,5 +1,4 @@
 import { updateRecord, TableList } from '@/utils';
-import type { TodoType } from '@/utils/db/po/type';
 
 
 /**

@@ -1,5 +1,4 @@
 import { updateRecord, TableList, getRecordInRange, getLogger } from '@/utils';
-import type { SubjectType } from '@/utils/db/po/type';
 
 /**
  * 新建/更新主题
@@ -22,6 +21,23 @@ export const getSubjectInRangeLocal = async (min: number, max: number) => {
 		},
 		(reason) => {
 			getLogger().error(`getSubjectInRangeLocal error: ${reason}`);
+			return [];
+		}
+	)
+}
+
+/**
+ * 查询指定范围内的todo
+ * @param min 最小的todo的id
+ * @param max 最大的todo的id
+ */
+export const getTodoInRangeLocal = async (min: number, max: number) => {
+	return getRecordInRange(TableList.Todo, min, max, 'id').then(
+		(todo) => {
+			return todo as TodoType[];
+		},
+		(reason) => {
+			getLogger().error(`getTodoInRangeLocal error: ${reason}`);
 			return [];
 		}
 	)

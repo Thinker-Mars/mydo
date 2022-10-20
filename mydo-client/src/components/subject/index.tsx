@@ -2,7 +2,7 @@ import { useState, useImperativeHandle, forwardRef } from 'react';
 import dayjs from 'dayjs';
 import { Form, Dialog, Textarea, MessagePlugin } from 'tdesign-react';
 import { Todo, TodoSelect } from '@/components';
-import { updateTodoLocal, updateSubjectLocal } from '@/api/local';
+import { updateLocalTodo, updateLocalSubject } from '@/api/local';
 import { Header, SubjectMaxLength } from './constants';
 import { haveLogin } from '@/utils';
 import type { SubjectProps, SubjectInstance } from './type';
@@ -46,7 +46,7 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 			}
 			return filterTodo;
 		});
-		const resultKey = await updateTodoLocal(filterTodos);
+		const resultKey = await updateLocalTodo(filterTodos);
 		return resultKey;
 	}
 
@@ -59,13 +59,13 @@ const Subject = forwardRef((props: SubjectProps, ref) => {
 		const todosKey = await updateTodos(subjectTodo);
 		const subject: SubjectType = {
 			subjectName,
-			todoList: todosKey,
+			todoIdList: todosKey,
 			createTime: dayjs().valueOf()
 		}
 		if (subjectId) {
 			subject.id = subjectId;
 		}
-		await updateSubjectLocal(subject);
+		await updateLocalSubject(subject);
 		MessagePlugin.success('操作成功', 1500);
 		setVisible(false);
 	}

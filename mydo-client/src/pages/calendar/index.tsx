@@ -4,7 +4,7 @@ import { Calendar, Swiper } from 'tdesign-react';
 import type { CalendarCell } from 'tdesign-react';
 import { Subject } from '@/components';
 import type { SubjectInstance } from '@/components';
-import { getSubject } from './service';
+import { getLocalSubject } from './service';
 import styles from './index.less';
 
 const { SwiperItem } = Swiper;
@@ -33,7 +33,9 @@ const SubjectCalendar = () => {
 	}
 
 	useEffect(() => {
-		getSubject(10, 2022);
+		getLocalSubject(10, 2022).then((data) => {
+			console.log(data);
+		})
 	}, [])
 
 	return (

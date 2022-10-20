@@ -14,7 +14,7 @@ const Subject: TableType = {
 			remark: '主题创建时间（ms）',
 			unique: false
 		},
-		todoList: {
+		todoIdList: {
 			remark: '主题下todo的id',
 			unique: false
 		},
